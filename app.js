@@ -1,10 +1,12 @@
 const { app, BrowserWindow, Tray, Menu } = require('electron');
 const path = require('path');
-require('update-electron-app')()
+const { updateElectronApp } = require('update-electron-app')
 const startServer = require('./server');
 const AutoLaunch = require('auto-launch');
 const dotenv = require('dotenv');
 dotenv.config();
+updateElectronApp()
+
 // parse application/json
 let tray = null;
 let mainWindow = null;

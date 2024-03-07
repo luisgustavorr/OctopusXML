@@ -1,6 +1,6 @@
 {
-  "name": "octopusxml",
-  "version": "1.0.9",
+  "name":"OctopusXMLPrinter",
+  "version":"1.0.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/luisgustavorr/OctopusXML.git"

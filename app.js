@@ -47,14 +47,14 @@ function createTray() {
 app.whenReady().then(() => {
     tcpPortUsed.check(3000, '127.0.0.1')
         .then(function (inUse) {
-            if(inUse){
+            if (inUse) {
                 console.log("parou")
                 app.exit(0)
                 return;
-            }else{
+            } else {
                 createWindow();
                 createTray();
-            
+
                 startServer();
             }
         }, function (err) {

@@ -5,12 +5,12 @@ const startServer = require('./server');
 const AutoLaunch = require('auto-launch');
 const dotenv = require('dotenv');
 dotenv.config();
-
 // parse application/json
 let tray = null;
 let mainWindow = null;
-function createWindow() {
 updateElectronApp()
+function createWindow() {
+
 
     mainWindow = new BrowserWindow({
         width: 800,
@@ -48,12 +48,14 @@ app.whenReady().then(() => {
         name: 'octopusxml.exe',
         path: app.getPath('exe'),
       });
+
       autoLaunch.isEnabled().then((isEnabled) => {
         if (!isEnabled) autoLaunch.enable();
       });
 
     createWindow();
     createTray();
+console.log(app.getVersion())
 
     startServer();
 

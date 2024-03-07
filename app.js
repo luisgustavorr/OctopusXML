@@ -1,7 +1,7 @@
 const { app, BrowserWindow, Tray, Menu } = require('electron');
 const path = require('path');
 const { autoUpdater } = require("electron-updater")
-
+var tcpPortUsed = require('tcp-port-used');
 const startServer = require('./server');
 const AutoLaunch = require('auto-launch');
 const dotenv = require('dotenv');
@@ -31,7 +31,7 @@ function createWindow() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, "favicon_io",'favicon.ico')); // Path to your tray icon
+    tray = new Tray(path.join(__dirname, "favicon_io", 'favicon.ico')); // Path to your tray icon
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Abrir', click: () => createWindow() },
         { label: 'Fechar ( parar impressão )', click: () => app.quit() }
@@ -45,20 +45,31 @@ function createTray() {
 }
 
 app.whenReady().then(() => {
+    tcpPortUsed.check(3000, '127.0.0.1')
+        .then(function (inUse) {
+            if(inUse){
+                console.log("parou")
+                app.exit(0)
+                return;
+            }else{
+                createWindow();
+                createTray();
+            
+                startServer();
+            }
+        }, function (err) {
+            console.error('Error on check:', err.message);
+        });
     let autoLaunch = new AutoLaunch({
         name: 'octopusxml.exe',
         path: app.getPath('exe'),
-      });
+    });
 
-      autoLaunch.isEnabled().then((isEnabled) => {
+    autoLaunch.isEnabled().then((isEnabled) => {
         if (!isEnabled) autoLaunch.enable();
-      });
+    });
 
-    createWindow();
-    createTray();
-console.log(app.getVersion())
 
-    startServer();
 
 });
 

@@ -31,6 +31,8 @@
     },
     "nsis": {
       "oneClick": true,
+      "deleteAppDataOnUninstall":true,
+      "removeDefaultUninstallWelcomePage":false,
       "installerIcon": "./favicon_io/favicon.ico",
       "uninstallerIcon": "./favicon_io/favicon.ico",
       "uninstallDisplayName": "Octopus-Xml-Printer",

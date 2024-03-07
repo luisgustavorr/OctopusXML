@@ -5,12 +5,13 @@ const startServer = require('./server');
 const AutoLaunch = require('auto-launch');
 const dotenv = require('dotenv');
 dotenv.config();
-updateElectronApp()
 
 // parse application/json
 let tray = null;
 let mainWindow = null;
 function createWindow() {
+updateElectronApp()
+
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,

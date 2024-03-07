@@ -10,8 +10,6 @@ updateElectronApp()
 // parse application/json
 let tray = null;
 let mainWindow = null;
-
-console.log(process.env.CSC_LINK)
 function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,

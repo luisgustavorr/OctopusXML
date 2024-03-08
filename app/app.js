@@ -54,7 +54,7 @@ function createWindow() {
         }
     });
 
-    mainWindow.loadFile('./assets/screens/index.html');
+    mainWindow.loadFile('./index.html');
 
     mainWindow.on('closed', () => {
         mainWindow = null;

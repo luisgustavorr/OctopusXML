@@ -5,11 +5,11 @@
     "type": "git",
     "url": "https://github.com/luisgustavorr/OctopusXML.git"
   },
-  "icon": "./favicon_io/favicon.ico",
+  "icon": "./app/assets/images/favicon_io/favicon.ico",
   "description": "Código em Node para auxiliar na impressão de NfC-e, apartir do xml.",
-  "main": "app.js",
+  "main": "./app/app.js",
   "scripts": {
-    "start": "electron app.js",
+    "start": "electron ./app/app.js",
     "build": "electron-builder --win -p always"
   },
   "build": {
@@ -27,14 +27,14 @@
       "target": [
         "nsis"
       ],
-      "icon": "./favicon_io/favicon.ico"
+      "icon": "./app/assets/images/favicon_io/favicon.ico"
     },
     "nsis": {
       "oneClick": true,
       "deleteAppDataOnUninstall": true,
       "removeDefaultUninstallWelcomePage": false,
-      "installerIcon": "./favicon_io/favicon.ico",
-      "uninstallerIcon": "./favicon_io/favicon.ico",
+      "installerIcon": "./app/assets/images/favicon_io/favicon.ico",
+      "uninstallerIcon": "./app/assets/images/favicon_io/favicon.ico",
       "uninstallDisplayName": "Octopus-Xml-Printer",
       "license": "license.md",
       "allowToChangeInstallationDirectory": false

@@ -2,28 +2,59 @@ const { app, BrowserWindow, Tray, Menu } = require('electron');
 const path = require('path');
 const { autoUpdater } = require("electron-updater")
 var tcpPortUsed = require('tcp-port-used');
-const startServer = require('./server');
+const startServer = require('./modules/server');
 const AutoLaunch = require('auto-launch');
-const dotenv = require('dotenv');
-dotenv.config();
+const fs = require('fs');
+const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
+
+// Redireciona a saída do console para o arquivo
+console.log = function(msg) {
+    logStream.write(new Date().toString() +" - "+ msg + '\n');
+};
 // parse application/json
 let tray = null;
 let mainWindow = null;
 autoUpdater.checkForUpdatesAndNotify()
+autoUpdater.on('checking-for-update', () => {
+    console.log('Checking for update...');
+});
+
+autoUpdater.on('update-available', (info) => {
+    console.log('Update available.');
+});
+
+autoUpdater.on('update-not-available', (info) => {
+    console.log('Update not available.');
+});
+
+autoUpdater.on('error', (err) => {
+    console.log('Error in auto-updater. ' + err);
+});
+
+autoUpdater.on('download-progress', (progressObj) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    console.log(log_message);
+});
+
+autoUpdater.on('update-downloaded', (info) => {
+    console.log('Update downloaded');
+});
 function createWindow() {
 
 
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        icon: __dirname + '/favicon_io/favicon.ico',
+        icon: __dirname + './assets/images/favicon_io/favicon.ico',
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true
         }
     });
 
-    mainWindow.loadFile('index.html');
+    mainWindow.loadFile('./assets/screens/index.html');
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -31,7 +62,7 @@ function createWindow() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, "favicon_io", 'favicon.ico')); // Path to your tray icon
+    tray = new Tray(path.join(__dirname, "assets", "images", "favicon_io", 'favicon.ico')); // Path to your tray icon
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Abrir', click: () => createWindow() },
         { label: 'Fechar ( parar impressão )', click: () => app.quit() }

@@ -1,6 +1,6 @@
 {
-  "name":"OctopusXMLPrinter",
-  "version":"1.0.12",
+  "name": "OctopusXMLPrinter",
+  "version": "1.0.12",
   "repository": {
     "type": "git",
     "url": "https://github.com/luisgustavorr/OctopusXML.git"
@@ -9,7 +9,7 @@
   "description": "Código em Node para auxiliar na impressão de NfC-e, apartir do xml.",
   "main": "./app.js",
   "scripts": {
-    "start": "electron ./app.js",
+    "start": "electron .",
     "build": "electron-builder --win -p always"
   },
   "build": {
@@ -50,6 +50,9 @@
     "escpos": "^3.0.0-alpha.6",
     "escpos-network": "^3.0.0-alpha.5",
     "express": "^4.18.3",
+    "jquery": "3.2.1",
+
+    "jsdom": "10.1.0",
     "tcp-port-used": "^1.0.2",
     "update-electron-app": "^3.0.0",
     "xml-js": "^1.6.11"

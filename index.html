@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OctopusXMLPrinter</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -11,12 +13,58 @@
       rel="stylesheet"
     />
   </head>
-
+  <div id="modal_restart">
+    <h2>Favor reiniciar o sistema para aplicar as atualizações</h2>
+    <button>Reiniciar</button>
+  </div>
   <body>
+    <fundo></fundo>
     <img src="./app/assets/images/gif_printing.gif" width="100px" />
     <h3>Tudo pronto para imprimir (Já pode fechar essa janela)...</h3>
   </body>
   <style>
+    #modal_restart button {
+      background: #004cffa6;
+      border: none;
+      color: white;
+      height: 30px;
+      width: 100px;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+    #modal_restart h2 {
+      font-size: 25px;
+      text-align: center;
+      font-weight: 400;
+    }
+    #modal_restart {
+      background: white;
+      display: none;
+      position: absolute;
+      transform: translate(-50%, -50%);
+      width: 400px;
+      z-index: 3;
+      flex-direction: column;
+      height: 200px;
+      top: 50%;
+      left: 50%;
+      justify-content: space-between;
+      padding: 20px;
+      border-radius: 5px;
+      align-items: center;
+    }
+    fundo {
+      background: rgba(0, 0, 0, 0.874);
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      z-index: 2;
+    }
     * {
       margin: 0;
       font-family: "Roboto", sans-serif;
@@ -30,4 +78,5 @@
       align-items: center;
     }
   </style>
+   <script data-main="./renderer.js" src="require.js"></script>
 </html>

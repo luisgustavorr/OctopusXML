@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
 const path = require('path');
 const { autoUpdater } = require("electron-updater")
 var tcpPortUsed = require('tcp-port-used');
@@ -8,8 +8,8 @@ const fs = require('fs');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
 
 // Redireciona a saída do console para o arquivo
-console.log = function(msg) {
-    logStream.write(new Date().toString() +" - "+ msg + '\n');
+console.log = function (msg) {
+    logStream.write(new Date().toString() + " - " + msg + '\n');
 };
 // parse application/json
 let tray = null;
@@ -39,7 +39,8 @@ autoUpdater.on('download-progress', (progressObj) => {
 });
 
 autoUpdater.on('update-downloaded', (info) => {
-    console.log('Update downloaded');
+    app.relaunch()
+    app.exit()
 });
 function createWindow() {
 
@@ -54,7 +55,7 @@ function createWindow() {
         }
     });
 
-    mainWindow.loadFile('./index.html');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
 
     mainWindow.on('closed', () => {
         mainWindow = null;
@@ -62,7 +63,7 @@ function createWindow() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname,"app", "assets", "images", "favicon_io", 'favicon.ico')); // Path to your tray icon
+    tray = new Tray(path.join(__dirname, "app", "assets", "images", "favicon_io", 'favicon.ico')); // Path to your tray icon
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Abrir', click: () => createWindow() },
         { label: 'Fechar ( parar impressão )', click: () => app.quit() }
@@ -77,6 +78,7 @@ function createTray() {
 
 app.whenReady().then(() => {
     tcpPortUsed.check(3000, '127.0.0.1')
+
         .then(function (inUse) {
             if (inUse) {
                 console.log("parou")
@@ -84,6 +86,10 @@ app.whenReady().then(() => {
                 return;
             } else {
                 createWindow();
+                mainWindow.webContents.send('alterarDOM', 'do something for me');
+                ipcMain.on("btnclick", function(event, arg) { 
+                    console.log(event)
+                } )
                 createTray();
 
                 startServer();

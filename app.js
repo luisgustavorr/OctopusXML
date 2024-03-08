@@ -47,7 +47,7 @@ function createWindow() {
     mainWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        icon: __dirname + './assets/images/favicon_io/favicon.ico',
+        icon: __dirname + './app/assets/images/favicon_io/favicon.ico',
         autoHideMenuBar: true,
         webPreferences: {
             nodeIntegration: true
@@ -62,7 +62,7 @@ function createWindow() {
 }
 
 function createTray() {
-    tray = new Tray(path.join(__dirname, "assets", "images", "favicon_io", 'favicon.ico')); // Path to your tray icon
+    tray = new Tray(path.join(__dirname,"app", "assets", "images", "favicon_io", 'favicon.ico')); // Path to your tray icon
     const contextMenu = Menu.buildFromTemplate([
         { label: 'Abrir', click: () => createWindow() },
         { label: 'Fechar ( parar impressão )', click: () => app.quit() }

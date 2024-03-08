@@ -4,26 +4,6 @@ const escpos = require('escpos');
 escpos.Network = require('escpos-network');
 
 
-// Definir os frames da animação
-const frames = [
-`     ( . . )
-    ( ( () ) )
-               Octopus is writing.`,
-`     ( . . )
-     (( () ))
-               Octopus is writing..`,
-`     ( . . )
-      ((()))
-               Octopus is writing...`,
-`     ( . . )
-     (( () ))
-               Octopus is writing.`,
-
-`     ( . . )
-    ( ( () ) )
-               Octopus is writing..`,
-];
-
 
 
 class DanfcePOS {

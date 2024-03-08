@@ -87,9 +87,7 @@ app.whenReady().then(() => {
             } else {
                 createWindow();
                 mainWindow.webContents.send('alterarDOM', 'do something for me');
-                ipcMain.on("btnclick", function(event, arg) { 
-                    console.log(event)
-                } )
+
                 createTray();
 
                 startServer();

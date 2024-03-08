@@ -39,8 +39,8 @@ autoUpdater.on('download-progress', (progressObj) => {
 });
 
 autoUpdater.on('update-downloaded', (info) => {
-    app.relaunch()
-    app.exit()
+    console.log('Updated');
+
 });
 function createWindow() {
 

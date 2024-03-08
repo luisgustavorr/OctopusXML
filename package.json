@@ -1,15 +1,15 @@
 {
   "name":"OctopusXMLPrinter",
-  "version":"1.0.10",
+  "version":"1.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/luisgustavorr/OctopusXML.git"
   },
   "icon": "./app/assets/images/favicon_io/favicon.ico",
   "description": "Código em Node para auxiliar na impressão de NfC-e, apartir do xml.",
-  "main": "./app/app.js",
+  "main": "./app.js",
   "scripts": {
-    "start": "electron ./app/app.js",
+    "start": "electron ./app.js",
     "build": "electron-builder --win -p always"
   },
   "build": {

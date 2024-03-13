@@ -5,12 +5,15 @@ var tcpPortUsed = require('tcp-port-used');
 const startServer = require('./app/modules/server');
 const AutoLaunch = require('auto-launch');
 const fs = require('fs');
+const { Console } = require('console');
+const { event } = require('jquery');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
 
 // Redireciona a saída do console para o arquivo
 console.log = function (msg) {
     logStream.write(new Date().toString() + " - " + msg + '\n');
 };
+let icounter = 0
 // parse application/json
 let tray = null;
 let mainWindow = null;
@@ -51,12 +54,19 @@ function createWindow() {
         icon: __dirname + './app/assets/images/favicon_io/favicon.ico',
         autoHideMenuBar: true,
         webPreferences: {
+            preload: path.join(__dirname, 'preload.js'),
             nodeIntegration: true
         }
     });
 
     mainWindow.loadURL('file://' + __dirname + '/index.html');
 
+
+    //render to main 2-way
+    ipcMain.handle('sendInfo', async (event, ...args) => {
+       
+        return "funcionou"
+      })
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
@@ -86,7 +96,14 @@ app.whenReady().then(() => {
                 return;
             } else {
                 createWindow();
-                mainWindow.webContents.send('alterarDOM', 'do something for me');
+                //main to render
+                setTimeout(()=>{
+                    mainWindow.webContents.send('update', -1)
+                    ipcMain.on('renderToMainOneWay',(event,arg)=>{
+                        console.log("arg")
+                        return arg
+                    } )
+                },500)
 
                 createTray();
 

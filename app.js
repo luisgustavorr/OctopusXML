@@ -24,6 +24,8 @@ autoUpdater.on('checking-for-update', () => {
 
 autoUpdater.on('update-available', (info) => {
     console.log('Update available.');
+    mainWindow.webContents.send('changePercentDisplay',"block")
+
 });
 
 autoUpdater.on('update-not-available', (info) => {
@@ -38,12 +40,17 @@ autoUpdater.on('download-progress', (progressObj) => {
     let log_message = "Download speed: " + progressObj.bytesPerSecond;
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-    mainWindow.webContents.send('update', progressObj.percent)
+    if (progressObj.total > 0) {
+        mainWindow.webContents.send('update', progressObj.percent)
+    }
+
     console.log(log_message);
 });
 
 autoUpdater.on('update-downloaded', (info) => {
     console.log('Updated');
+    mainWindow.webContents.send('changePercentDisplay',"none")
+
 
 });
 function createWindow() {
@@ -65,9 +72,9 @@ function createWindow() {
 
     //render to main 2-way
     ipcMain.handle('sendInfo', async (event, ...args) => {
-       
+
         return "funcionou"
-      })
+    })
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
@@ -97,17 +104,13 @@ app.whenReady().then(() => {
                 return;
             } else {
                 createWindow();
-                //main to render
-                setInterval(()=>{
-                    mainWindow.webContents.send('update', -1)
-                },500)
-                setTimeout(()=>{
-                    
-                    ipcMain.on('renderToMainOneWay',(event,arg)=>{
+
+                setTimeout(() => {
+                    ipcMain.on('renderToMainOneWay', (event, arg) => {
                         console.log("arg")
                         return arg
-                    } )
-                },500)
+                    })
+                }, 500)
 
                 createTray();
 

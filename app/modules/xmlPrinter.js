@@ -225,7 +225,6 @@ class DanfcePOS {
             serie: this.strPad(`Série: ${serie}`, 10),
             data: this.strPad(new Date(dhEmi).toLocaleString('pt-BR', { timeZone: 'UTC' }), 23, ' ', 'left')
         };
-
         this.printer.text(`${linha.numero}${linha.serie}${linha.data}`, '857')
             .text("Consulte pela chave de acesso em ")
             .text(`https://portalsped.fazenda.mg.gov.br/portalnfce`, '857')

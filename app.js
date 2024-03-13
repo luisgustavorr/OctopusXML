@@ -10,9 +10,9 @@ const { event } = require('jquery');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
 
 // Redireciona a saída do console para o arquivo
-console.log = function (msg) {
-    logStream.write(new Date().toString() + " - " + msg + '\n');
-};
+// console.log = function (msg) {
+//     logStream.write(new Date().toString() + " - " + msg + '\n');
+// };
 let icounter = 0
 // parse application/json
 let tray = null;

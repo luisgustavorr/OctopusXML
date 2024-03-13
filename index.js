@@ -1,5 +1,5 @@
 window.indexBridge.update((_event, value) =>{
-    console.log(value)
+  $("#porcentagem").text("Atualizando:"+value+"%")
   })
   
 window.indexBridge.renderToMainOneWay("teste")

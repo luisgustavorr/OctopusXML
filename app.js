@@ -38,6 +38,7 @@ autoUpdater.on('download-progress', (progressObj) => {
     let log_message = "Download speed: " + progressObj.bytesPerSecond;
     log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    mainWindow.webContents.send('update', progressObj.percent)
     console.log(log_message);
 });
 
@@ -97,8 +98,11 @@ app.whenReady().then(() => {
             } else {
                 createWindow();
                 //main to render
-                setTimeout(()=>{
+                setInterval(()=>{
                     mainWindow.webContents.send('update', -1)
+                },500)
+                setTimeout(()=>{
+                    
                     ipcMain.on('renderToMainOneWay',(event,arg)=>{
                         console.log("arg")
                         return arg

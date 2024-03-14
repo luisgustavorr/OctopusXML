@@ -1,5 +1,5 @@
 window.indexBridge.update((_event, value) =>{
-  $("#porcentagem").text("Atualizando:"+value+"%")
+  $("#porcentagem").text(value)
   })
   
   window.indexBridge.changePercentDisplay((_event, value) =>{

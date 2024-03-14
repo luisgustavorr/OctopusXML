@@ -37,13 +37,12 @@ autoUpdater.on('error', (err) => {
 });
 
 autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Download speed: " + progressObj.bytesPerSecond;
-    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    let log_message = "Velocidade do Download: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' -Progresso Atualização :' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-    if (progressObj.total > 0) {
-        mainWindow.webContents.send('update', progressObj.percent)
+    if(mainWindow !== null){
+        mainWindow.webContents.send('update', log_message)
     }
-
     console.log(log_message);
 });
 

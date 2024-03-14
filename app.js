@@ -21,6 +21,9 @@ const gotTheLock = app.requestSingleInstanceLock()
 let tray = null;
 let mainWindow = null;
 const appVersion = app.getVersion()
+app.setLoginItemSettings({
+    openAtLogin: true,
+  });
 if (!gotTheLock) {
     app.quit()
 } else {
@@ -166,14 +169,14 @@ if (!gotTheLock) {
                 return false;
             }
         })
-        let autoLaunch = new AutoLaunch({
-            name: 'OctopusXMLPrinter.exe',
-            path: app.getPath('exe'),
-        });
+        // let autoLaunch = new AutoLaunch({
+        //     name: 'OctopusXMLPrinter',
+        //     path: app.getPath('exe'),
+        // });
 
-        autoLaunch.isEnabled().then((isEnabled) => {
-            if (!isEnabled) autoLaunch.enable();
-        });
+        // autoLaunch.isEnabled().then((isEnabled) => {
+        //     if (!isEnabled) autoLaunch.enable();
+        // });
 
     })
     app.on('activate', () => {

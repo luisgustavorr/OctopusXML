@@ -5,14 +5,15 @@ var tcpPortUsed = require('tcp-port-used');
 const startServer = require('./app/modules/server');
 const AutoLaunch = require('auto-launch');
 const fs = require('fs');
-const { Console } = require('console');
-const { event } = require('jquery');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
 
-// Redireciona a saída do console para o arquivo
-console.log = function (msg) {
-    logStream.write(new Date().toString() + " - " + msg + '\n');
-};
+let isDev = app.isPackaged
+if(isDev){
+    console.log = function (msg) {
+        logStream.write(new Date().toString() + " - " + msg + '\n');
+    };
+}
+
 let icounter = 0
 // parse application/json
 let tray = null;
@@ -70,10 +71,7 @@ function createWindow() {
 
 
     //render to main 2-way
-    ipcMain.handle('sendInfo', async (event, ...args) => {
 
-        return "funcionou"
-    })
     mainWindow.on('closed', () => {
         mainWindow = null;
     });
@@ -92,7 +90,6 @@ function createTray() {
         createWindow()
     });
 }
-
 app.whenReady().then(() => {
     tcpPortUsed.check(3000, '127.0.0.1')
 
@@ -129,6 +126,11 @@ app.on('window-all-closed', () => {
     }
 });
 app.on("ready",()=>{
+    console.log("ready")
+    ipcMain.handle('sendInfo', async (event, ...args) => {
+
+        return "funcionou"
+    })
     let autoLaunch = new AutoLaunch({
         name: 'octopusxml.exe',
         path: app.getPath('exe'),

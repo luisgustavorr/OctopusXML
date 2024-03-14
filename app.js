@@ -119,14 +119,6 @@ app.whenReady().then(() => {
         }, function (err) {
             console.error('Error on check:', err.message);
         });
-    let autoLaunch = new AutoLaunch({
-        name: 'octopusxml.exe',
-        path: app.getPath('exe'),
-    });
-
-    autoLaunch.isEnabled().then((isEnabled) => {
-        if (!isEnabled) autoLaunch.enable();
-    });
 
 
 
@@ -137,7 +129,17 @@ app.on('window-all-closed', () => {
 
     }
 });
+app.on("ready",()=>{
+    let autoLaunch = new AutoLaunch({
+        name: 'octopusxml.exe',
+        path: app.getPath('exe'),
+    });
 
+    autoLaunch.isEnabled().then((isEnabled) => {
+        if (!isEnabled) autoLaunch.enable();
+    });
+
+})
 app.on('activate', () => {
     if (mainWindow === null) {
         createWindow();

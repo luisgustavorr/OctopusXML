@@ -6,7 +6,6 @@ const serverManager = require('./app/modules/server');
 const Store = require('electron-store');
 const AutoLaunch = require('auto-launch');
 const fs = require('fs');
-const { event } = require('jquery');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
 const store = new Store();
 

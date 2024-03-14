@@ -14,13 +14,23 @@ if (isDev) {
         logStream.write(new Date().toString() + " - " + msg + '\n');
     };
 }
-
-let icounter = 0
+const gotTheLock = app.requestSingleInstanceLock()
+let tray = null;
+let mainWindow = null;
+if (!gotTheLock) {
+    app.quit()
+  } else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+      // Someone tried to run a second instance, we should focus our window.
+      if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore()
+        mainWindow.focus()
+      }
+    })
 // parse application/json
 const server = new serverManager()
 
-let tray = null;
-let mainWindow = null;
+
 autoUpdater.checkForUpdatesAndNotify()
 autoUpdater.on('checking-for-update', () => {
     console.log('Checking for update...');
@@ -98,12 +108,15 @@ app.whenReady().then(() => {
         .then(function (inUse) {
             if (inUse) {
                 console.log("parou")
+                createWindow();
+                mainWindow.webContents.send('alert', "Porta Ocupada, caso não seja o próprio Octopus XML Printer, altere a porta nas configurações do aplicativo.","Mensagem do Sistema","700px",'fa fa-warning')
                 app.exit(0)
                 return;
             } else {
                 createWindow();
 
                 setTimeout(() => {
+
                     ipcMain.on('renderToMainOneWay', (event, arg) => {
                         console.log("arg")
                         return arg
@@ -129,7 +142,7 @@ app.on('window-all-closed', () => {
 });
 app.on("ready", () => {
     console.log("ready")
-    ipcMain.on('restartServer', async (event, arg) => {
+    ipcMain.handle('restartServer', async (event, arg) => {
         console.log(arg)
         server.setPort(arg)
         return "funcionou"
@@ -159,3 +172,4 @@ app.on('activate', () => {
         createWindow();
     }
 });
+  }

@@ -90,14 +90,12 @@ class serverManager {
     }
     async stopServer() {
         try {
-
             console.log(`octopus parou de rodar na porta:  ${port}`);
             this.server.close();
             return true
 
         } catch (e) {
             return e
-
         }
     }
     async setPort(newPort) {

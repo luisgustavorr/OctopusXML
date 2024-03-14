@@ -25,7 +25,10 @@ if (!gotTheLock) {
       if (mainWindow) {
         if (mainWindow.isMinimized()) mainWindow.restore()
         mainWindow.focus()
-      }
+      }  
+      if (mainWindow === null) {
+        createWindow();
+    }
     })
 // parse application/json
 const server = new serverManager()

@@ -167,7 +167,7 @@ if (!gotTheLock) {
             }
         })
         let autoLaunch = new AutoLaunch({
-            name: 'octopusxml.exe',
+            name: 'OctopusXMLPrinter.exe',
             path: app.getPath('exe'),
         });
 

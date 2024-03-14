@@ -15,9 +15,7 @@ if (isDev) {
         logStream.write(new Date().toString() + " - " + msg + '\n');
     };
 }
-if (!store.has('PORT')) {
-    store.set('PORT', 3000);
-}
+
 console.log(store.get("PORT"))
 const gotTheLock = app.requestSingleInstanceLock()
 let tray = null;

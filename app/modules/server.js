@@ -11,6 +11,9 @@ const multer = require('multer');
 const storage = multer.memoryStorage();
 const Store = require('electron-store');
 const store = new Store();
+if (!store.has('PORT')) {
+    store.set('PORT', 3000);
+}
 let port = store.get('PORT');
 
 if (store.has('minhaVariavel')) {

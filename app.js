@@ -2,13 +2,14 @@ const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
 const path = require('path');
 const { autoUpdater } = require("electron-updater")
 var tcpPortUsed = require('tcp-port-used');
-const startServer = require('./app/modules/server');
+const serverManager = require('./app/modules/server');
+
 const AutoLaunch = require('auto-launch');
 const fs = require('fs');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
 
 let isDev = app.isPackaged
-if(isDev){
+if (isDev) {
     console.log = function (msg) {
         logStream.write(new Date().toString() + " - " + msg + '\n');
     };
@@ -16,6 +17,8 @@ if(isDev){
 
 let icounter = 0
 // parse application/json
+const server = new serverManager()
+
 let tray = null;
 let mainWindow = null;
 autoUpdater.checkForUpdatesAndNotify()
@@ -25,7 +28,7 @@ autoUpdater.on('checking-for-update', () => {
 
 autoUpdater.on('update-available', (info) => {
     console.log('Update available.');
-    mainWindow.webContents.send('changePercentDisplay',"block")
+    mainWindow.webContents.send('changePercentDisplay', "block")
 
 });
 
@@ -38,10 +41,9 @@ autoUpdater.on('error', (err) => {
 });
 
 autoUpdater.on('download-progress', (progressObj) => {
-    let log_message = "Velocidade do Download: " + progressObj.bytesPerSecond;
-    log_message = log_message + ' -Progresso Atualização :' + progressObj.percent + '%';
+    let log_message = 'Progresso Atualização :' + progressObj.percent + '%';
     log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
-    if(mainWindow !== null){
+    if (mainWindow !== null) {
         mainWindow.webContents.send('update', log_message)
     }
     console.log(log_message);
@@ -49,7 +51,7 @@ autoUpdater.on('download-progress', (progressObj) => {
 
 autoUpdater.on('update-downloaded', (info) => {
     console.log('Updated');
-    mainWindow.webContents.send('changePercentDisplay',"none")
+    mainWindow.webContents.send('changePercentDisplay', "none")
 
 
 });
@@ -91,7 +93,7 @@ function createTray() {
     });
 }
 app.whenReady().then(() => {
-    tcpPortUsed.check(3000, '127.0.0.1')
+    tcpPortUsed.check(parseInt(server.getPort()), '127.0.0.1')
 
         .then(function (inUse) {
             if (inUse) {
@@ -110,7 +112,7 @@ app.whenReady().then(() => {
 
                 createTray();
 
-                startServer();
+                server.startServer();
             }
         }, function (err) {
             console.error('Error on check:', err.message);
@@ -125,11 +127,22 @@ app.on('window-all-closed', () => {
 
     }
 });
-app.on("ready",()=>{
+app.on("ready", () => {
     console.log("ready")
-    ipcMain.handle('sendInfo', async (event, ...args) => {
-
+    ipcMain.on('restartServer', async (event, arg) => {
+        console.log(arg)
+        server.setPort(arg)
         return "funcionou"
+    })
+    ipcMain.handle('checkPort', async (event, arg) => {
+        try {
+            let using = await tcpPortUsed.check(parseInt(arg), '127.0.0.1');
+            console.log(using);
+            return using;
+        } catch (error) {
+            console.error(error);
+            return false;
+        }
     })
     let autoLaunch = new AutoLaunch({
         name: 'octopusxml.exe',

@@ -6,8 +6,10 @@ let indexBridge = {
 
     renderToMainOneWay: (arg) => ipcRenderer.send('renderToMainOneWay',arg),
 
-    openFile: () => ipcRenderer.invoke('sendInfo')
+    restartServer: (port) => ipcRenderer.sendSync('restartServer',port),
+    checkPort: (port) => ipcRenderer.invoke('checkPort',port)
+
 
 }
-ipcRenderer.send('renderToMainOneWay',"arg")
+
 contextBridge.exposeInMainWorld("indexBridge",indexBridge)

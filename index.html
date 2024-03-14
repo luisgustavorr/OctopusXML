@@ -1,11 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>OctopusXMLPrinter</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./app/js/jquery-confirm-v3.3.4/css/jquery-confirm.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -15,64 +14,95 @@
   </head>
 
   <body>
-    <h3 id="porcentagem"></h3>
-    <div id="modal_restart">
-      <h2>Aplicativo com atualização detectada, reinicie o aplicativo para aplica-la</h2>
-      <button>Reiniciar</button>
-    </div>
-    <fundo></fundo>
-    <img src="./app/assets/images/gif_printing.gif" width="100px" />
-    <h3>Tudo pronto para imprimir...!</h3>
+    <header>
+      <img src="./app/assets/images/gif_printing.gif"  />
+      <div class="header_infos">
+        <h3>OctopusXMLPrinter</h3>
+        <div>
+          <p
+            >Status :
+            <span>Rodando</span></p
+          >
+          <p
+            >Porta :
+            <span>3000</span></p
+          >
+        </div>
+      </div>
+    </header>
+    <section id="content">
+      <section id="config_father">
+        <h3>&lt;Configurações &gt;</h3>
+          <h4>Alterar Porta : <input type="text" value="3000"></h4>
+
+      </section>
+    </section>
   </body>
   <style>
-    #porcentagem{
-      display: none;
-    }
-    #modal_restart button {
-      background: #004cffa6;
-      border: none;
-      color: white;
-      height: 30px;
-      width: 100px;
+    #config_father{
+      margin: 20px;
+      width: 40vw;
+      border: 1px solid #DBDBDB;
       border-radius: 5px;
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
+      background: #EBEBEB;
+      padding: 10px;
     }
-    #modal_restart h2 {
-      font-size: 25px;
-      text-align: center;
+    #config_father h3{
       font-weight: 400;
+      margin-bottom: 10px;
     }
-    #modal_restart {
-      background: white;
-      display: none;
+    #config_father h4{
+      font-weight: 400;
+      margin: 0 20px;
+    }
+    body header .header_infos {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      width: 90vw;
+      
+    }
+ 
+    body header .header_infos h3 {
       position: absolute;
       transform: translate(-50%, -50%);
-      width: 400px;
-      z-index: 3;
-      flex-direction: column;
-      height: 200px;
-      top: 50%;
+      top: 17%;
       left: 50%;
-      justify-content: space-between;
-      padding: 20px;
-      border-radius: 5px;
-      align-items: center;
     }
+    body header .header_infos div p{
+      margin: 5px 0;
+      font-weight: 500;
+    }
+    body header .header_infos div span{
+      font-weight: 400;
 
+    }
+    body header .header_infos div {
+      position: absolute;
+      top: 45%;
+      left: 0%;
+    }
+    header img {
+      width: 20vh;
+}
+    body header {
+      width: 100%;
+    border-bottom: 1px solid black;
+    height: 16vh;
+    display: flex;
+    }
     * {
       margin: 0;
       font-family: "Roboto", sans-serif;
     }
     body {
-      width: 99vw;
+      width: 99.9vw;
       height: 99vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
     }
   </style>
-   <script  src="index.js"></script>
+  <script src="app/js/jquery.js"></script>
+  <script src="app/js/jquery-confirm-v3.3.4/js/jquery-confirm.js"></script>
+  <script src="app/js/alertar.js"></script>
+  <script src="app/js/index.js"></script>
+
 </html>

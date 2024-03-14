@@ -3,11 +3,12 @@ const path = require('path');
 const { autoUpdater } = require("electron-updater")
 var tcpPortUsed = require('tcp-port-used');
 const serverManager = require('./app/modules/server');
-
+const Store = require('electron-store');
 const AutoLaunch = require('auto-launch');
 const fs = require('fs');
 const { event } = require('jquery');
 const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
+const store = new Store();
 
 let isDev = app.isPackaged
 if (isDev) {
@@ -15,6 +16,10 @@ if (isDev) {
         logStream.write(new Date().toString() + " - " + msg + '\n');
     };
 }
+if (!store.has('PORT')) {
+    store.set('PORT', 3000);
+}
+console.log(store.get("PORT"))
 const gotTheLock = app.requestSingleInstanceLock()
 let tray = null;
 let mainWindow = null;

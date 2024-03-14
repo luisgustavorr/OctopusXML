@@ -6,10 +6,19 @@ const path = require('node:path');
 const DanfcePOS = require("./xmlPrinter");
 const app = express();
 const fs = require('fs');
-const config = require("../config/config.json");
-let port = config.porta;
+
 const multer = require('multer');
 const storage = multer.memoryStorage();
+const Store = require('electron-store');
+const store = new Store();
+let port = store.get('PORT');
+
+if (store.has('minhaVariavel')) {
+    let minhaVariavel = store.get('minhaVariavel');
+
+    // Faça qualquer manipulação necessária na variável
+    console.log('Valor da minhaVariavel:', minhaVariavel);
+  }
 const upload = multer({
     storage: storage,
     limits: {
@@ -102,11 +111,7 @@ class serverManager {
         try {
 
             port = newPort
-            let jsonData = JSON.parse(fs.readFileSync("app/config/config.json"));
-            // Add or edit data 
-            jsonData.porta = newPort;
-            // Write the JSON filWSe 
-            fs.writeFileSync("app/config/config.json", JSON.stringify(jsonData));
+            store.set('PORT', port);
             await this.stopServer()
             this.startServer()
             return true

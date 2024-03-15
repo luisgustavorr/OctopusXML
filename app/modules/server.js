@@ -43,18 +43,27 @@ app.get('/', (req, res) => {
 let returnJSON = {
     "": ""
 }
-function generateXMLPath(date) {
+function generatePath(date, type) {
     let data = date
     let dataArray = data.split("-")
-    let caminhoXML = path.resolve("C:\\Users\\Public\\Documents\\NotasFiscais\\xml" + "\\" + dataArray[0] + "\\" + dataArray[1] + "\\" + dataArray[2] + "\\" + data + ".xml")
+    let caminhoXML = path.resolve("C:\\Users\\Public\\Documents\\NotasFiscais\\" + type + "\\" + dataArray[0] + "\\" + dataArray[1] + "\\" + dataArray[2] + "\\" + data + "." + type)
+    
+    // Verifica se o diretório do caminho existe, se não, cria recursivamente
+    let dirname = path.dirname(caminhoXML);
+    if (!fs.existsSync(dirname)) {
+        fs.mkdirSync(dirname, { recursive: true });
+    }
+
     return caminhoXML;
 }
+
 app.post('/printXML', upload.none(), async (req, res) => {
+    console.log("print")
     try {
         let data = req.body.dataXML
         console.log(data)
-        console.log(generateXMLPath(data))
-        let printer = await new DanfcePOS(generateXMLPath(data), "localhost")
+       
+        let printer = await new DanfcePOS(generatePath(data,"xml"), "localhost")
         printer.printAll()
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {
@@ -66,11 +75,33 @@ app.post('/printXML', upload.none(), async (req, res) => {
 });
 
 app.post('/saveXML', upload.single("fileXML"), async (req, res) => {
+    console.log("print")
+
     try {
         let data = req.body.dataXML
         const fileInfo = req.file
         const base64 = fileInfo.buffer.toString("base64");
-        let caminhoXML = generateXMLPath(data)
+        let caminhoXML = generatePath(data,"xml")
+
+        const filePath = caminhoXML
+
+        fs.writeFileSync(filePath, fileInfo.buffer)
+        res.status(200).json({ status: "Sucesso" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ status: "Falha" });
+
+    }
+
+});
+app.post('/savePDF', upload.single("filePDF"), async (req, res) => {
+    console.log("print")
+
+    try {
+        let data = req.body.dataXML
+        const fileInfo = req.file
+        const base64 = fileInfo.buffer.toString("base64");
+        let caminhoXML = generatePath(data,"pdf")
 
         const filePath = caminhoXML
 

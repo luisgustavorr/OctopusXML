@@ -98,6 +98,11 @@ if (!gotTheLock) {
         mainWindow.on('closed', () => {
             mainWindow = null;
         });
+        setTimeout(() => {
+            mainWindow.webContents.send("getVersion",appVersion)
+
+        mainWindow.webContents.send("getPort",store.get("PORT"))
+        },500)
     }
 
     function createTray() {
@@ -127,7 +132,6 @@ if (!gotTheLock) {
                     createWindow();
 
                     setTimeout(() => {
-                        mainWindow.webContents.send("getVersion",appVersion)
                         ipcMain.on('renderToMainOneWay', (event, arg) => {
                             console.log("arg")
                             return arg

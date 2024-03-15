@@ -4,6 +4,11 @@ window.indexBridge.update((_event, value) => {
 window.indexBridge.getVersion((_event, value) => {
   $("#version").text(value)
 })
+window.indexBridge.getPort((_event, value) => {
+  $("#porta").text(value)
+  $("#config_father input").val(value)
+
+})
 window.indexBridge.changePercentDisplay((_event, value) => {
   $("#porcentagem").css("display", value)
 })

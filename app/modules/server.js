@@ -40,9 +40,7 @@ app.get('/', (req, res) => {
     res.status(200).json({ status: 200 });
 
 });
-let returnJSON = {
-    "": ""
-}
+
 function generatePath(date, type) {
     let data = date
     let dataArray = data.split("-")
@@ -61,14 +59,17 @@ app.post('/printXML', upload.none(), async (req, res) => {
     console.log("print")
     try {
         let data = req.body.dataXML
+        let vID = req.body.vID
+        let pID = req.body.pID
+
         console.log(data)
        
-        let printer = await new DanfcePOS(generatePath(data,"xml"), "localhost")
+        let printer = await new DanfcePOS(generatePath(data,"xml"), vID,pID)
         printer.printAll()
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ status: "Falha" });
+        res.status(500).json({  status: "Falha :" + error });
 
     }
 
@@ -89,7 +90,7 @@ app.post('/saveXML', upload.single("fileXML"), async (req, res) => {
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ status: "Falha" });
+        res.status(500).json({ status: "Falha :" + error });
 
     }
 
@@ -109,7 +110,7 @@ app.post('/savePDF', upload.single("filePDF"), async (req, res) => {
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {
         console.log(error)
-        res.status(500).json({ status: "Falha" });
+        res.status(500).json({ status: "Falha :" + error });
 
     }
 

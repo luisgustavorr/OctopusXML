@@ -4,10 +4,10 @@ const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 
 class DanfcePOS {
-    constructor(xml_Path, device) {
+    constructor(xml_Path,vID,pID) {
         this.xmlNFE = xml_Path;
         this.NFeJSON = {};
-        this.device = new escpos.USB(0x04B8, 0x0E27);
+        this.device = new escpos.USB(vID,pID);
 
     }
 

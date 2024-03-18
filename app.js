@@ -6,7 +6,19 @@ const serverManager = require('./app/modules/server');
 const Store = require('electron-store');
 const AutoLaunch = require('auto-launch');
 const fs = require('fs');
-const logStream = fs.createWriteStream("C:\\Users\\Public\\Documents\\OctopusXMLLogs\\logfile.txt", { flags: 'a' });
+const logsDir = "C:\\Users\\Public\\Documents\\OctopusXMLLogs";
+const logFilePath = path.join(logsDir, "logfile.txt");
+
+// Cria o diretório de logs recursivamente, se necessário
+fs.mkdirSync(logsDir, { recursive: true });
+
+// Cria o arquivo de log se não existir
+if (!fs.existsSync(logFilePath)) {
+    fs.writeFileSync(logFilePath, ''); // Cria o arquivo vazio
+}
+
+// Cria o fluxo de escrita para o arquivo de log
+const logStream = fs.createWriteStream(logFilePath, { flags: 'a' });
 const store = new Store();
 
 let isDev = app.isPackaged

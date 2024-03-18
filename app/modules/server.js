@@ -58,11 +58,11 @@ function generatePath(date, type) {
 app.post('/printXML', upload.none(), async (req, res) => {
     console.log("print")
     try {
-        let data = req.body.dataXML
+        let data =await req.body.dataXML
         let vID = req.body.vID
         let pID = req.body.pID
 
-        console.log(data)
+        console.log(req.body)
        
         let printer = await new DanfcePOS(generatePath(data,"xml"), vID,pID)
         printer.printAll()
@@ -99,7 +99,7 @@ app.post('/savePDF', upload.single("filePDF"), async (req, res) => {
     console.log("print")
 
     try {
-        let data = req.body.dataXML
+        let data = await req.body.dataXML
         const fileInfo = req.file
         const base64 = fileInfo.buffer.toString("base64");
         let caminhoXML = generatePath(data,"pdf")

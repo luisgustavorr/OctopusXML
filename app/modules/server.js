@@ -45,7 +45,7 @@ function generatePath(date, type) {
     let data = date
     let dataArray = data.split("-")
     let caminhoXML = path.resolve("C:\\Users\\Public\\Documents\\NotasFiscais\\" + type + "\\" + dataArray[0] + "\\" + dataArray[1] + "\\" + dataArray[2] + "\\" + data + "." + type)
-    
+    console.log(caminhoXML)
     // Verifica se o diretório do caminho existe, se não, cria recursivamente
     let dirname = path.dirname(caminhoXML);
     if (!fs.existsSync(dirname)) {
@@ -60,11 +60,11 @@ app.post('/printXML', upload.none(), async (req, res) => {
     try {
         let data =await req.body.dataXML
         let vID = req.body.vID
-        let pID = req.body.pID
-
-        console.log(req.body)
-       
-        let printer = await new DanfcePOS(generatePath(data,"xml"), vID,pID)
+        let pID = req.body.pID      
+        console.log(data)
+        console.log(vID) 
+        console.log(pID) 
+        let printer = new DanfcePOS(generatePath(data,"xml"), vID,pID)
         printer.printAll()
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {

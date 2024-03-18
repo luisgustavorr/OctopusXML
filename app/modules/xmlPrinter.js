@@ -7,7 +7,7 @@ class DanfcePOS {
     constructor(xml_Path,vID,pID) {
         this.xmlNFE = xml_Path;
         this.NFeJSON = {};
-        this.device = new escpos.USB(vID,pID);
+        this.device = new escpos.USB(0x04B8,0x0E27);
 
     }
 

@@ -12,9 +12,9 @@ Sistema desktop criado usando NodeJS com electron, além de usar diversas biblio
 
 ## Instalação
 
-- 1°- Ir nos releases do GitHub
-- 2°- Selecionar a última versão
-- 3°- Baixar o setup e executar ele
+- 1° Ir nos releases do GitHub
+- 2° Selecionar a última versão
+- 3° Baixar o setup e executar ele
 
 ## API Reference
 
@@ -42,7 +42,7 @@ Sistema desktop criado usando NodeJS com electron, além de usar diversas biblio
 | `filePDF` | `file` | PDF da Nota     |
 
 
-####  savePDF
+####  printNFCe
 
 ```http
  POST http://localhost:${port}/printXML

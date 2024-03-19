@@ -6,6 +6,7 @@ escpos.USB = require('escpos-usb');
 class Order {
     constructor(saleInfo, vID, pID, local = false) {
         this.saleInfo = JSON.parse(saleInfo);
+        this.saleInfo = JSON.parse(this.saleInfo)
         this.local = local
         console.log(vID)
         if (!local) {
@@ -36,7 +37,7 @@ class Order {
             .text("CUPOM DE VENDA", '857')
 
         this.separador();
-        
+        console.log( this.saleInfo)
         const [ dataCompra, horaCompra ] = this.saleInfo["infoVenda"].data.split(" ")
         this.printer
             .text("Data da compra: " + dataCompra, '857')

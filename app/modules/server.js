@@ -6,6 +6,11 @@ const path = require('node:path');
 const DanfcePOS = require("./xmlPrinter");
 const app = express();
 const fs = require('fs');
+const Order = require("./printOrder")
+const Fechamento = require("./printFechamento")
+const Venda = require("./printLastVenda")
+
+const Sangria = require("./printSangria")
 
 const multer = require('multer');
 const storage = multer.memoryStorage();
@@ -74,7 +79,74 @@ app.post('/printXML', upload.none(), async (req, res) => {
     }
 
 });
+app.post('/printOrder', upload.none(), async (req, res) => {
+    console.log("print")
+    try {
+        let infoOrder =await req.body.infoOrder
+  
+        let vID = req.body.vID
+   
 
+        let pID = req.body.pID      
+        let printer = new Order(infoOrder,vID,pID)
+        printer.printOrder()
+        res.status(200).json({ status: "Sucesso" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({  status: "Falha :" + error });
+
+    }
+
+});
+app.post('/printFechamento', upload.none(), async (req, res) => {
+    try {
+        let infoOrder =await req.body.infoOrder
+        let vID = req.body.vID
+        let pID = req.body.pID      
+        console.log(req.body)
+        let printer = new Fechamento(infoOrder,vID,pID,true)
+        printer.printOrder()
+        res.status(200).json({ status: "Sucesso" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({  status: "Falha :" + error });
+
+    }
+
+});
+app.post('/printSangria', upload.none(), async (req, res) => {
+    console.log("print")
+    try {
+        let infoOrder =await req.body.infoOrder
+        let vID = req.body.vID
+
+        let pID = req.body.pID      
+        let printer = new Sangria(infoOrder,vID,pID)
+        printer.printOrder()
+        res.status(200).json({ status: "Sucesso" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({  status: "Falha :" + error });
+
+    }
+
+});
+app.post('/printLastVenda', upload.none(), async (req, res) => {
+    console.log("print")
+    try {
+        let infoOrder =await req.body.infoOrder
+        let vID = req.body.vID
+        let pID = req.body.pID      
+        let printer = new Venda(infoOrder,vID,pID)
+        printer.printOrder()
+        res.status(200).json({ status: "Sucesso" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({  status: "Falha :" + error });
+
+    }
+
+});
 app.post('/saveXML', upload.single("fileXML"), async (req, res) => {
     console.log("print")
 

@@ -6,17 +6,22 @@ escpos.USB = require('escpos-usb');
 class Order {
     constructor(closeInfo, vID, pID, local = false) {
         this.closeInfo = closeInfo;
-        console.log(typeof(this.closeInfo))
+        console.log(typeof (this.closeInfo))
 
         this.local = local
         console.log(vID)
-            this.device = new escpos.USB(vID, pID);
+        this.device = new escpos.USB(vID, pID);
     }
     printOrder() {
-        this.textConfig()
-        this.staticPart()
-        this.printer.cut().close()
-
+        this.device.open((err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            this.textConfig()
+            this.staticPart()
+            this.printer.cut().close()
+        })
     }
     textConfig() {
         this.printer = new escpos.Printer(this.device);

@@ -1,6 +1,3 @@
-const fs = require("fs");
-const convert = require('xml-js');
-const localPrinter = require("./consolePrinter")
 const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 class Order {
@@ -11,11 +8,16 @@ class Order {
             this.device = new escpos.USB(vID, pID);
     }
     printOrder() {
+        this.device.open((err) => {
+            if (err) {
+                console.error(err);
+                return;
+            }
         this.textConfig()
         this.staticPart()
         this.repeatPart()
         this.printer.cut().close()
-
+        })
     }
     textConfig() {
         this.printer = new escpos.Printer(this.device);

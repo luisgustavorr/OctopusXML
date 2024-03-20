@@ -104,7 +104,7 @@ app.post('/printFechamento', upload.none(), async (req, res) => {
         let vID = req.body.vID
         let pID = req.body.pID      
         console.log(req.body)
-        let printer = new Fechamento(infoOrder,vID,pID,true)
+        let printer = new Fechamento(infoOrder,vID,pID)
         printer.printOrder()
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {

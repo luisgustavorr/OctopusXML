@@ -80,7 +80,7 @@ class Order {
     }
     repeatPart() {
         let valorTotal = 0
-        for (const produto of JSON.parse(this.orderInfo.produtos)) {
+        for (const produto of this.orderInfo.produtos) {
             valorTotal = parseFloat(parseFloat(valorTotal) + parseFloat(produto.preco)).toFixed(2)
             this.printer
                 .text(produto.quantidade + " - " + produto.id.replace(/_/g," ") + " R$"+produto.preco, '857')

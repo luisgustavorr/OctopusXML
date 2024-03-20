@@ -114,7 +114,6 @@ app.post('/printSangria', upload.none(), async (req, res) => {
     console.log("print")
     try {
         let infoOrder =await req.body.infoOrder
-        console.log(req.body)
         infoOrder = JSON.parse(infoOrder)
         let vID = req.body.vID
         let pID = req.body.pID      

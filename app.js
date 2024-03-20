@@ -75,7 +75,7 @@ if (!gotTheLock) {
     });
 
     autoUpdater.on('download-progress', (progressObj) => {
-        let log_message = 'Progresso Atualização :' + progressObj.percent + '%';
+        let log_message = 'Progresso Atualização :' + parseFloat(progressObj.percent).toFixed(2) + '%';
         if (mainWindow !== null) {
             mainWindow.webContents.send('update', log_message)
         }

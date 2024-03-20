@@ -9,12 +9,9 @@ const { format } = require('date-fns');
 
 class Order {
     constructor(sangriaInfo, vID, pID, local = false) {
-        this.sangriaInfo = JSON.parse(sangriaInfo);
-        this.local = local
-        console.log(vID)
-        if (!local) {
-            this.device = new escpos.USB(vID, pID);
-        }
+        this.sangriaInfo = sangriaInfo;
+        console.log(typeof(this.sangriaInfo))
+        this.device = new escpos.USB(vID, pID);
     }
     printOrder() {
         this.textConfig()
@@ -25,9 +22,6 @@ class Order {
     textConfig() {
         this.printer = new escpos.Printer(this.device);
 
-        if (this.local) {
-            this.printer = new localPrinter()
-        }
         this.printer
             .font('a')
             .size(1, 1)

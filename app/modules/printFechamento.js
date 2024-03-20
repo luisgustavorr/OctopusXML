@@ -5,14 +5,12 @@ const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 class Order {
     constructor(closeInfo, vID, pID, local = false) {
-        this.closeInfo = JSON.parse(closeInfo);
-        this.closeInfo = JSON.parse(this.closeInfo);
+        this.closeInfo = closeInfo;
+        console.log(typeof(this.closeInfo))
 
         this.local = local
         console.log(vID)
-        if (!local) {
             this.device = new escpos.USB(vID, pID);
-        }
     }
     printOrder() {
         this.textConfig()
@@ -23,16 +21,13 @@ class Order {
     textConfig() {
         this.printer = new escpos.Printer(this.device);
 
-        if (this.local) {
-            this.printer = new localPrinter()
-        }
+
         this.printer
             .font('a')
             .size(1, 1)
             .align('lt')
     }
     staticPart() {
-        console.log(typeof (this.closeInfo))
         this.printer
             .text("FECHAMENTO DE CAIXA", '857')
 

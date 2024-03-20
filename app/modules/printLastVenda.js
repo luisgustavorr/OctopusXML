@@ -5,13 +5,9 @@ const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 class Order {
     constructor(saleInfo, vID, pID, local = false) {
-        this.saleInfo = JSON.parse(saleInfo);
-        this.saleInfo = JSON.parse(this.saleInfo)
+        this.saleInfo =saleInfo;
         this.local = local
-        console.log(vID)
-        if (!local) {
-            this.device = new escpos.USB(vID, pID);
-        }
+        this.device = new escpos.USB(vID, pID);
     }
     printOrder() {
         this.textConfig()
@@ -23,9 +19,7 @@ class Order {
     textConfig() {
         this.printer = new escpos.Printer(this.device);
 
-        if (this.local) {
-            this.printer = new localPrinter()
-        }
+
         this.printer
             .font('a')
             .size(1, 1)
@@ -35,7 +29,6 @@ class Order {
         console.log(typeof (this.saleInfo))
         this.printer
             .text("CUPOM DE VENDA", '857')
-
         this.separador();
         console.log( this.saleInfo)
         const [ dataCompra, horaCompra ] = this.saleInfo["infoVenda"].data.split(" ")

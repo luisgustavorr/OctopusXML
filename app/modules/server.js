@@ -67,8 +67,6 @@ app.post('/printXML', upload.none(), async (req, res) => {
         let vID = req.body.vID
         let pID = req.body.pID      
         console.log(data)
-        console.log(vID) 
-        console.log(pID) 
         let printer = new DanfcePOS(generatePath(data,"xml"), vID,pID)
         printer.printAll()
         res.status(200).json({ status: "Sucesso" });
@@ -83,10 +81,9 @@ app.post('/printOrder', upload.none(), async (req, res) => {
     console.log("print")
     try {
         let infoOrder =await req.body.infoOrder
-  
+        infoOrder = JSON.parse(infoOrder)
+        console.log(req.body)
         let vID = req.body.vID
-   
-
         let pID = req.body.pID      
         let printer = new Order(infoOrder,vID,pID)
         printer.printOrder()
@@ -101,10 +98,10 @@ app.post('/printOrder', upload.none(), async (req, res) => {
 app.post('/printFechamento', upload.none(), async (req, res) => {
     try {
         let infoOrder =await req.body.infoOrder
+        infoOrder = JSON.parse(infoOrder)
         let vID = req.body.vID
         let pID = req.body.pID      
-        console.log(req.body)
-        let printer = new Fechamento(infoOrder,vID,pID)
+        let printer = new Fechamento(infoOrder,vID,pID,true)
         printer.printOrder()
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {
@@ -118,8 +115,9 @@ app.post('/printSangria', upload.none(), async (req, res) => {
     console.log("print")
     try {
         let infoOrder =await req.body.infoOrder
+        console.log(req.body)
+        infoOrder = JSON.parse(infoOrder)
         let vID = req.body.vID
-
         let pID = req.body.pID      
         let printer = new Sangria(infoOrder,vID,pID)
         printer.printOrder()
@@ -135,9 +133,10 @@ app.post('/printLastVenda', upload.none(), async (req, res) => {
     console.log("print")
     try {
         let infoOrder =await req.body.infoOrder
+        infoOrder = JSON.parse(infoOrder)
         let vID = req.body.vID
         let pID = req.body.pID      
-        let printer = new Venda(infoOrder,vID,pID)
+        let printer = new Venda(infoOrder,vID,pID,true)
         printer.printOrder()
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {

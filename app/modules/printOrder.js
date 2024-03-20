@@ -5,12 +5,11 @@ const escpos = require('escpos');
 escpos.USB = require('escpos-usb');
 class Order {
     constructor(orderInfo, vID, pID, local = false) {
-        this.orderInfo = JSON.parse(orderInfo);
+        this.orderInfo =orderInfo;
+        console.log(typeof(this.orderInfo))
         this.local = local
             console.log(vID)
-        if (!local) {
             this.device = new escpos.USB(vID, pID);
-        }
     }
     printOrder() {
         this.textConfig()
@@ -21,10 +20,6 @@ class Order {
     }
     textConfig() {
         this.printer = new escpos.Printer(this.device);
-
-        if (this.local) {
-            this.printer = new localPrinter()
-        }
         this.printer
             .font('a')
             .size(1, 1)

@@ -82,7 +82,6 @@ app.post('/printOrder', upload.none(), async (req, res) => {
     try {
         let infoOrder =await req.body.infoOrder
         infoOrder = JSON.parse(infoOrder)
-        console.log(req.body)
         let vID = req.body.vID
         let pID = req.body.pID      
         let printer = new Order(infoOrder,vID,pID)

@@ -6,7 +6,6 @@ escpos.USB = require('escpos-usb');
 class Order {
     constructor(orderInfo, vID, pID, local = false) {
         this.orderInfo =orderInfo;
-        console.log(typeof(this.orderInfo))
         this.local = local
             console.log(vID)
             this.device = new escpos.USB(vID, pID);

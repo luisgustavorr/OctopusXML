@@ -18,7 +18,6 @@ class DanfcePOS {
                 return;
             }
             this.printer = new escpos.Printer(this.device);
-            this.printer = new localPrinter()
             this.loadNFCe();
             this.parteI();
             this.parteII();

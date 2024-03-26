@@ -1,0 +1,29 @@
+<?xml version="1.1" encoding="UTF-8"?>
+<printer vID="23123" pID="3123" >
+
+
+<b>
+    <small>
+        <ct>
+            <text>Holá Mundo</text>
+            <text>Holá Mundo</text>
+        </ct>
+    </small>
+</b>
+<b>
+    <small>
+        <ct>
+            <text>Holá Mundo</text>
+            <text>Holá Mundo</text>
+        </ct>
+    </small>
+</b>
+<a>
+    <small>
+        <ct>
+            <text>Holá Mundo</text>
+            <text>Holá Mundo</text>
+        </ct>
+    </small>
+</a>
+</printer>

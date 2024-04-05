@@ -89,7 +89,9 @@ if (!gotTheLock) {
 
     });
     function createWindow() {
-
+        if (mainWindow != null) {
+            mainWindow.destroy()
+        };
 
         mainWindow = new BrowserWindow({
             width: 800,
@@ -141,7 +143,6 @@ if (!gotTheLock) {
                     app.exit(0)
                     return;
                 } else {
-                    createWindow();
 
                     setTimeout(() => {
                         ipcMain.on('renderToMainOneWay', (event, arg) => {

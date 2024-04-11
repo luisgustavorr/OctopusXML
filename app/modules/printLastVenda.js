@@ -27,7 +27,7 @@ class Order {
 
         this.printer
             .font('a')
-            .size(1, 1)
+            .size(0, 0)
             .align('lt')
     }
     staticPart() {

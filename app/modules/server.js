@@ -146,7 +146,6 @@ app.post('/printLastVenda', upload.none(), async (req, res) => {
 });
 app.post('/saveXML', upload.single("fileXML"), async (req, res) => {
     console.log("print")
-
     try {
         let data = req.body.dataXML
         const fileInfo = req.file

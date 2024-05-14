@@ -144,10 +144,34 @@ app.post('/printLastVenda', upload.none(), async (req, res) => {
     }
 
 });
-app.post('/saveXML', upload.single("fileXML"), async (req, res) => {
+
+app.post('/saveTXITENS', upload.single("fileTXITENS"), async (req, res) => {
     console.log("print")
     try {
         let data = req.body.dataXML
+        const fileInfo = req.file
+        const base64 = fileInfo.buffer.toString("base64");
+        let dirname = "C:\\Users\\Public\\Documents\\TXITENSQendra"
+        let caminhoXML = path.resolve("C:\\Users\\Public\\Documents\\TXITENSQendra\\txitens.txt")
+        console.log(caminhoXML)
+        // Verifica se o diretório do caminho existe, se não, cria recursivamente
+        if (!fs.existsSync(dirname)) {
+            fs.mkdirSync(dirname, { recursive: true });
+        }
+        const filePath = caminhoXML
+        fs.writeFileSync(filePath, fileInfo.buffer)
+        res.status(200).json({ status: "Sucesso" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ status: "Falha :" + error });
+
+    }
+
+});
+app.post('/saveXML', upload.single("fileXML"), async (req, res) => {
+    console.log("print")
+    try {
+        let data = await req.body.dataXML
         const fileInfo = req.file
         const base64 = fileInfo.buffer.toString("base64");
         let caminhoXML = generatePath(data,"xml")
@@ -169,11 +193,11 @@ app.post('/savePDF', upload.single("filePDF"), async (req, res) => {
     try {
         let data = await req.body.dataXML
         const fileInfo = req.file
+        console.log(fileInfo)
         const base64 = fileInfo.buffer.toString("base64");
         let caminhoXML = generatePath(data,"pdf")
 
         const filePath = caminhoXML
-
         fs.writeFileSync(filePath, fileInfo.buffer)
         res.status(200).json({ status: "Sucesso" });
     } catch (error) {

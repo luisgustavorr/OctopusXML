@@ -1,35 +1,42 @@
-const escpos = require('escpos');
-escpos.USB = require('escpos-usb');
+
+const ThermalPrinter = require("node-thermal-printer").printer;
+const PrinterTypes = require("node-thermal-printer").types;
+
 class Order {
     constructor(orderInfo, vID, pID, local = false) {
-        this.orderInfo =orderInfo;
+        this.orderInfo =JSON.parse(orderInfo);
+        console.log(orderInfo)
         this.local = local
-            console.log(vID)
-            this.device = new escpos.USB(vID, pID);
+
+       
     }
     printOrder() {
-        this.device.open((err) => {
-            if (err) {
-                console.error(err);
-                return;
-            }
+
         this.textConfig()
         this.staticPart()
         this.repeatPart()
-        this.printer.cut().close()
-        })
+        this.printer.cut()
+        try {
+            let execute = this.printer.execute()
+            console.log("Print done!");
+          } catch (error) {
+            console.error("Print failed:", error);
+          }
     }
     textConfig() {
-        this.printer = new escpos.Printer(this.device);
-        this.printer
-            .font('a')
-            .size(0, 0)
-            .align('lt')
+        this.printer = new ThermalPrinter({
+            type: PrinterTypes.EPSON,
+            interface: '//localhost/printer_octopus'
+      
+          });
+
+        this.printer.setTypeFontA()
+        this.printer.setTextNormal()
+        this.printer.alignLeft()
     }
     staticPart() {
 
-        this.printer
-            .text("PEDIDO", '857')
+        this.printer.println("PEDIDO")
 
         this.separador()
         let retirada = "NAO"
@@ -45,50 +52,51 @@ class Order {
              numero_formatado = "("+numero[0]+numero[1]+") "+numero[2]+" "+numero[3]+numero[4]+numero[5]+numero[6]+"-"+numero[7]+numero[8]+numero[9]+numero[10]
 
         }
-        this.printer
-            .text("Cliente: " + this.orderInfo.cliente, '857')
-            .text("Número Cliente: " + numero_formatado, '857')
+        
+            this.printer.println("Cliente: " + this.orderInfo.cliente)
+            this.printer.println("Número Cliente: " + numero_formatado)
         this.separador()
-        this.printer
-            .text("Valor Entrada: " + this.orderInfo.valor_entrada, '857')
+        
+            this.printer.println("Valor Entrada: " + this.orderInfo.valor_entrada)
         this.separador()
-        this.printer
-            .text("Data do Pedido: " + dataPedido, '857')
-            .text("Hora do Pedido: " + horaPedido, '857')
+        
+            this.printer.println("Data do Pedido: " + dataPedido)
+            this.printer.println("Hora do Pedido: " + horaPedido)
         this.separador()
-        this.printer
-            .text("Data da Entrega: " + dataEntrega, '857')
-            .text("Hora da Entrega: " + horaEntrega, '857')
+        
+            this.printer.println("Data da Entrega: " + dataEntrega)
+            this.printer.println("Hora da Entrega: " + horaEntrega)
         this.separador()
-        this.printer
-            .text("Entrega ? " + retirada, '857')
+        
+            this.printer.println("Entrega ? " + retirada)
         if (retirada == "NAO") {
-            this.printer
-                .text("Endereço: " + this.orderInfo.endereco, '857')
+            
+                this.printer.println("Endereço: " + this.orderInfo.endereco)
         }
         this.separador()
 
-        this.printer
-            .text("-> DOCUMENTO NAO FISCAL <-", '857')
+        
+            this.printer.println("-> DOCUMENTO NAO FISCAL <-")
             this.separador()
-        this.printer
-            .text("Itens", '857')
+        
+            this.printer.println("Itens")
     }
     repeatPart() {
         let valorTotal = 0
-        for (const produto of this.orderInfo.produtos) {
+        for (const produto of JSON.parse(this.orderInfo.produtos)) {
             valorTotal = parseFloat(parseFloat(valorTotal) + parseFloat(produto.preco)).toFixed(2)
-            this.printer
-                .text(produto.quantidade + " - " + produto.id.replace(/_/g," ") + " R$"+produto.preco, '857')
+            
+                this.printer.println(produto.quantidade + " - " + produto.id.replace(/_/g," ") + " R$"+produto.preco)
         }
         this.separador()
 
-        this.printer
-        .text("Valor Total: R$"+valorTotal+"\n", '857')
+        
+        this.printer.println("Valor Total: R$"+valorTotal+"\n")
     }
     separador() {
-        this.printer.align("lt")
-        this.printer.text('='.repeat(38), '857');
+        this.printer.alignLeft()
+
+        this.printer.println('='.repeat(38));
     }
 }
 // let data = { "id": "308", "cliente": "Teste", "produtos": "[{\"id\":\"Teste_1\",\"quantidade\":\"1\",\"preco\":\"10.00\"},{\"id\":\"Teste_2\",\"quantidade\":\"1\",\"preco\":\"10.00\"}]", "entregue": "0", "data_entrega": "2024-01-10 14:30:00", "data_pedido": "2024-01-10 14:00:00", "retirada": "0", "forma_pagamento": "Pix", "endereco": "", "caixa": "Mix Salgados Prainha Ltda", "valor_entrada": "10", "metodo_entrada": "Pix", "colaborador": "9841", "numero_cliente": "37984103402", "enviado": "0" }

@@ -1,13 +1,15 @@
+const { ThermalPrinter, PrinterTypes, CharacterSet } = require('node-thermal-printer');
 
-const ThermalPrinter = require("node-thermal-printer").printer;
-const PrinterTypes = require("node-thermal-printer").types;
 
 class Order {
     constructor(orderInfo, vID, pID, local = false) {
-        this.orderInfo =JSON.parse(orderInfo);
+        console.log(typeof(orderInfo))
         console.log(orderInfo)
-        this.local = local
 
+        this.orderInfo =JSON.parse(orderInfo);
+        this.local = local
+        this.vID = vID
+        console.log(`IMPRESSORA DESEJADA:${vID}`)
        
     }
     printOrder() {
@@ -19,14 +21,22 @@ class Order {
         try {
             let execute = this.printer.execute()
             console.log("Print done!");
+            console.log("\n\n\n");
+        console.log(this.printer.getText());
+        console.log("\n\n\n");
+
           } catch (error) {
             console.error("Print failed:", error);
           }
+
     }
     textConfig() {
         this.printer = new ThermalPrinter({
+                
             type: PrinterTypes.EPSON,
-            interface: '//localhost/printer_octopus'
+            characterSet: CharacterSet.PC852_LATIN2,
+            removeSpecialCharacters: true, 
+            interface: '//localhost/'+this.vID
       
           });
 
@@ -53,11 +63,11 @@ class Order {
 
         }
         
-            this.printer.println("Cliente: " + this.orderInfo.cliente)
-            this.printer.println("Número Cliente: " + numero_formatado)
+            this.printer.println("Cliente: " + this.orderInfo.cliente,"857")
+            this.printer.println("N.Cliente: " + numero_formatado,"857")
         this.separador()
         
-            this.printer.println("Valor Entrada: " + this.orderInfo.valor_entrada)
+            this.printer.println("Valor Entrada: " + this.orderInfo.valor_entrada,"857")
         this.separador()
         
             this.printer.println("Data do Pedido: " + dataPedido)
@@ -71,7 +81,7 @@ class Order {
             this.printer.println("Entrega ? " + retirada)
         if (retirada == "NAO") {
             
-                this.printer.println("Endereço: " + this.orderInfo.endereco)
+                this.printer.println("Endereco: " + this.orderInfo.endereco)
         }
         this.separador()
 
@@ -83,7 +93,11 @@ class Order {
     }
     repeatPart() {
         let valorTotal = 0
-        for (const produto of JSON.parse(this.orderInfo.produtos)) {
+        let produtos = this.orderInfo.produtos
+        if(typeof produtos === "string"){
+            produtos =JSON.parse(produtos)
+        }
+        for (const produto of produtos ) {
             valorTotal = parseFloat(parseFloat(valorTotal) + parseFloat(produto.preco)).toFixed(2)
             
                 this.printer.println(produto.quantidade + " - " + produto.id.replace(/_/g," ") + " R$"+produto.preco)

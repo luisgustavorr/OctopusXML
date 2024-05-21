@@ -1,13 +1,14 @@
 const fs = require("fs");
 const convert = require('xml-js');
-const ThermalPrinter = require("node-thermal-printer").printer;
-const PrinterTypes = require("node-thermal-printer").types;
+const { ThermalPrinter, PrinterTypes, CharacterSet } = require('node-thermal-printer');
 
 
 
 class DanfcePOS {
     constructor(xml_Path,vID,pID) {
         this.xmlNFE = xml_Path;
+        this.vID = vID
+        // console.log(`IMPRESSORA DESEJADA:${vID}`)
         this.NFeJSON = {};
     }
 
@@ -15,8 +16,11 @@ class DanfcePOS {
 
   
             this.printer = new ThermalPrinter({
+                
                 type: PrinterTypes.EPSON,
-                interface: '//localhost/printer_octopus'
+                characterSet: CharacterSet.PC852_LATIN2,
+                removeSpecialCharacters: true, 
+                interface: '//localhost/'+this.vID
           
               });
             this.loadNFCe();
@@ -30,7 +34,10 @@ class DanfcePOS {
             this.parteIX();
             try {
                 let execute = this.printer.execute()
-                console.log("Print done!");
+                // console.log("Print done!");
+                console.log("\n\n\n");
+                console.log(this.printer.getText());
+                console.log("\n\n\n");
               } catch (error) {
                 console.error("Print failed:", error);
               }
@@ -81,10 +88,10 @@ class DanfcePOS {
         this.printer.setTextNormal()
 
         this.printer.alignCenter()
-            this.printer.println(razao)
-            this.printer.println("CNPJ: " + cnpj + "     " + "IE: " + ie)
-            this.printer.println(log + ', ' + nro)
-            this.printer.println(bairro + ', ' + mun + ' - ' + uf)
+            this.printer.println(razao,"857")
+            this.printer.println("CNPJ: " + cnpj + "     " + "IE: " + ie,"857")
+            this.printer.println(log + ', ' + nro,"857")
+            this.printer.println(bairro + ', ' + mun + ' - ' + uf,"857")
         this.separador();
 
     }
@@ -92,8 +99,8 @@ class DanfcePOS {
     parteII() {
         
             this.printer.alignCenter()
-            this.printer.println("DANFCe - Documento Auxiliar da Nota Fiscal\ne Consumidor Eletronica")
-            this.printer.println("Nao permite aproveitamento de crédito de ICMS.")
+            this.printer.println("DANFCe - Documento Auxiliar da Nota Fiscal\ne Consumidor Eletronica","857")
+            this.printer.println("Nao permite aproveitamento de crédito de ICMS.","857")
 
         this.separador();
     }
@@ -103,7 +110,7 @@ class DanfcePOS {
     parteIII() {
             this.printer.alignCenter()
 
-            this.printer.println("Cód.  Descrição          Qtd. Un. Valor Total")
+            this.printer.println("Cód.  Descrição          Qtd. Un. Valor Total","857")
             ;
 
         let det = this.NFeJSON.nfeProc.NFe.infNFe.det;
@@ -134,7 +141,7 @@ class DanfcePOS {
 
             // Imprimir linha
             this.printer.println(
-                `${linha.cod}${linha.descricao}${linha.quantidade}${linha.unidade}${linha.valor_unit}${linha.valor_total}`
+                `${linha.cod}${linha.descricao}${linha.quantidade}${linha.unidade}${linha.valor_unit}${linha.valor_total}`,"857"
             );
 
             vTot += vProd;
@@ -148,11 +155,11 @@ class DanfcePOS {
 
             this.printer.alignCenter()
 
-            this.printer.println('Qtd. Total:' + this.strPad(this.totItens.toString(), 17, ' ', 'left'))
-            this.printer.println('Total dos Produtos:' + this.strPad('R$' + vTot.toFixed(2).replace('.', ','), 17, ' ', 'left'))
-            this.printer.println('Desconto:' + this.strPad('R$' + this.NFeJSON.nfeProc.NFe.infNFe.total.ICMSTot.vDesc["_text"].toString().replace('.', ','), 17, ' ', 'left'))
+            this.printer.println('Qtd. Total:' + this.strPad(this.totItens.toString(), 17, ' ', 'left'),"857")
+            this.printer.println('Total dos Produtos:' + this.strPad('R$' + vTot.toFixed(2).replace('.', ','), 17, ' ', 'left'),"857")
+            this.printer.println('Desconto:' + this.strPad('R$' + this.NFeJSON.nfeProc.NFe.infNFe.total.ICMSTot.vDesc["_text"].toString().replace('.', ','), 17, ' ', 'left'),"857")
 
-            this.printer.println('Total:' + this.strPad('R$' + this.NFeJSON.nfeProc.NFe.infNFe.total.ICMSTot.vNF["_text"].toString().replace('.', ','), 17, ' ', 'left'))
+            this.printer.println('Total:' + this.strPad('R$' + this.NFeJSON.nfeProc.NFe.infNFe.total.ICMSTot.vNF["_text"].toString().replace('.', ','), 17, ' ', 'left'),"857")
         this.separador();
 
 
@@ -161,7 +168,7 @@ class DanfcePOS {
     // Passe para Node:
     parteIV() {
             this.printer.alignCenter();
-        this.printer.println("FORMA PAGAMENTO")
+        this.printer.println("FORMA PAGAMENTO","857")
 
         const pag = this.NFeJSON.nfeProc.NFe.infNFe.pag.detPag
         let tPag = pag.tPag["_text"].toString();
@@ -171,19 +178,19 @@ class DanfcePOS {
         const printFormPag = this.strPad(`${tPag}:`, 0, ' ', 'left') +
             this.strPad(`R$${vPag.toFixed(2).replace('.', ',')}`, 40, ' ', 'left');
 
-        this.printer.println(printFormPag);
+        this.printer.println(printFormPag,"857");
 
         const printTroco = this.strPad('Troco:', 0, ' ', 'left') +
             this.strPad(`R$${parseFloat(this.NFeJSON.nfeProc.NFe.infNFe.pag.vTroco["_text"]).toFixed(2).replace('.', ',')}`, 40, ' ', 'left');
 
-        this.printer.println(printTroco);
+        this.printer.println(printTroco,"857");
         this.separador();
         let uri = "";
         if (this.NFeJSON.nfeProc.protNFe) {
             uri = this.NFeJSON.nfeProc.NFe.infNFeSupl.urlChave._text;
         }
-        this.printer.println("Consulte pela chave de acesso em\n" + uri)
-            this.printer.println("CHAVE DE ACESSO\n" + "12345678901234567890123456789012345678901234")
+        this.printer.println("Consulte pela chave de acesso em\n" + uri,"857")
+            this.printer.println("CHAVE DE ACESSO\n" + "12345678901234567890123456789012345678901234","857")
         this.separador();
 
     }
@@ -193,12 +200,12 @@ class DanfcePOS {
             this.printer.alignCenter();
 
         const vTotTrib = 0;
-        console.log(vTotTrib)
+        // console.log(vTotTrib)
         const printImp = this.strPad('Informação dos Tributos Incidentes:', 35, ' ') +
             this.strPad(`R$${vTotTrib.toFixed(2).replace('.', ',')}`, 13, ' ', 'left');
 
-        this.printer.println(printImp)
-            this.printer.println('Fonte IBPT - Lei Federal 12.741/2012')
+        this.printer.println(printImp,"857")
+            this.printer.println('Fonte IBPT - Lei Federal 12.741/2012',"857")
             this.printer.alignCenter();
 
         this.separador();
@@ -209,7 +216,7 @@ class DanfcePOS {
 
         const tpAmb = parseInt(this.NFeJSON.nfeProc.NFe.infNFe.ide.tpAmb);
         if (tpAmb === 2) {
-            this.printer.println("EMITIDA EM AMBIENTE DE HOMOLOGAÇÃO SEM VALOR FISCAL");
+            this.printer.println("EMITIDA EM AMBIENTE DE HOMOLOGAÇÃO SEM VALOR FISCAL","857");
         }
 
         const nNF = this.NFeJSON.nfeProc.NFe.infNFe.ide.nNF["_text"].toString();
@@ -217,17 +224,17 @@ class DanfcePOS {
         const dhEmi = this.NFeJSON.nfeProc.NFe.infNFe.ide.dhEmi["_text"].toString();
         const Id = this.NFeJSON.nfeProc.NFe.infNFe["_attributes"].Id.toString();
         const chave = Id.substring(3);
-        console.log(dhEmi)
+        // console.log(dhEmi)
         const linha = {
             numero: this.strPad(`NFCe: ${nNF.replace(/\D/g, '')}`, 15),
             serie: this.strPad(`Série: ${serie}`, 10),
             data: this.strPad(new Date(dhEmi).toLocaleString('pt-BR', { timeZone: 'UTC' }), 23, ' ', 'left')
         };
-        this.printer.println(`${linha.numero}${linha.serie}${linha.data}`)
-            this.printer.println("Consulte pela chave de acesso em ")
-            this.printer.println(`https://portalsped.fazenda.mg.gov.br/portalnfce`)
-            this.printer.println("CHAVE DE ACESSO")
-            this.printer.println(`${chave}`)
+        this.printer.println(`${linha.numero}${linha.serie}${linha.data}`,"857")
+            this.printer.println("Consulte pela chave de acesso em ","857")
+            this.printer.println(`https://portalsped.fazenda.mg.gov.br/portalnfce`,"857")
+            this.printer.println("CHAVE DE ACESSO","857")
+            this.printer.println(`${chave}`,"857")
 
         this.separador();
     }
@@ -239,26 +246,26 @@ class DanfcePOS {
 
 
             this.printer
-                this.printer.println("INFORMAÇÕES ADICIONAIS")
+                this.printer.println("INFORMAÇÕES ADICIONAIS","857")
                 this.printer.feed(1)
-                this.printer.println(this.NFeJSON.nfeProc.infProt.xMsg)
+                this.printer.println(this.NFeJSON.nfeProc.infProt.xMsg,"857")
                 this.printer.feed(1)
         }
         const dest = this.NFeJSON.nfeProc.NFe.infNFe.dest;
         if (!dest) {
 
 
-                this.printer.println("CONSUMIDOR NAO IDENTIFICADO")
+                this.printer.println("CONSUMIDOR NAO IDENTIFICADO","857")
                 ;
             return;
         }
         const xNome = this.NFeJSON.nfeProc.NFe.infNFe.dest.xNome["_text"].toString();
             this.printer.alignCenter()
-            this.printer.println(`${xNome}\n`);
+            this.printer.println(`${xNome}\n`,"857");
         let cpf = null;
         let cnpj = null;
         let idEstrangeiro = null;
-        console.log(dest)
+        // console.log(dest)
         if (Object.keys(dest)[0] == "CPF") {
             cpf = this.NFeJSON.nfeProc.NFe.infNFe.dest.CPF["_text"].toString();
 
@@ -275,20 +282,20 @@ class DanfcePOS {
 
 
         if (cnpj) {
-            console.log("A")
-                this.printer.println(`CNPJ ${cnpj}`)
+            // console.log("A")
+                this.printer.println(`CNPJ ${cnpj}`,"857")
         }
 
         if (cpf) {
-            console.log("A")
+            // console.log("A")
 
-            this.printer.println(`CPF ${cpf}`);
+            this.printer.println(`CPF ${cpf}`,"857");
         }
 
         if (idEstrangeiro) {
-            console.log("A")
+            // console.log("A")
 
-            this.printer.println(`Estrangeiro ${idEstrangeiro}`);
+            this.printer.println(`Estrangeiro ${idEstrangeiro}`,"857");
         }
 
 
@@ -298,20 +305,20 @@ class DanfcePOS {
     // Passe para Node:
     parteIX() {
             this.printer.alignCenter()
-            this.printer.println("Consulte via Leitor de QRCode")
+            this.printer.println("Consulte via Leitor de QRCode","857")
 
         const qr = this.NFeJSON.nfeProc.NFe.infNFeSupl.qrCode["_text"].toString();
-        console.log(this.NFeJSON.nfeProc.NFe.infNFeSupl.qrCode["_text"])
+        // console.log(this.NFeJSON.nfeProc.NFe.infNFeSupl.qrCode["_text"])
         if (this.NFeJSON.nfeProc.protNFe) {
             const nProt = this.NFeJSON.nfeProc.protNFe.infProt.nProt["_text"].toString();
             const dhRecbto = this.NFeJSON.nfeProc.protNFe.infProt.dhRecbto["_text"].toString();
 
-            this.printer.println(`Protocolo de autorização: ${nProt}`);
-            this.printer.println(`Data de autorização: ${dhRecbto}`);
+            this.printer.println(`Protocolo de autorização: ${nProt}`,"857");
+            this.printer.println(`Data de autorização: ${dhRecbto}`,"857");
 
         } else {
 
-                this.printer.println("NOTA FISCAL INVÁLIDA - SEM PROTOCOLO DE AUTORIZAÇÃO")
+                this.printer.println("NOTA FISCAL INVÁLIDA - SEM PROTOCOLO DE AUTORIZAÇÃO","857")
                 ;
         }
         this.separador();
@@ -320,7 +327,7 @@ class DanfcePOS {
     }
     separador() {
         this.printer.alignCenter()
-        this.printer.println('='.repeat(48));
+        this.printer.println('='.repeat(48),"857");
     }
     // Passe para Node:
     intLowHigh(input, length) {
@@ -352,6 +359,6 @@ class DanfcePOS {
         return '';
     }
 }
-const imprimirDanfce = new DanfcePOS("C:\\Users\\Public\\Documents\\NotasFiscais\\xml\\2024\\05\\10\\2024-05-10-15-32-16.xml", "localhost")
-imprimirDanfce.printAll()
+// const imprimirDanfce = new DanfcePOS("C:\\Users\\Public\\Documents\\NotasFiscais\\xml\\2024\\05\\10\\2024-05-10-15-32-16.xml", "localhost")
+// imprimirDanfce.printAll()
 module.exports = DanfcePOS;

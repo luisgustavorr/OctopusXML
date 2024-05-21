@@ -43,8 +43,6 @@ $("#config_father input").change(
       alertar("Favor insira um valor")
     }
 
-
-
   });
   $("#config_father input").keyup((e)=>{
     if(e.keyCode ==13){

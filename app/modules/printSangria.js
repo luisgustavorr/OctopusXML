@@ -1,6 +1,6 @@
 
-const ThermalPrinter = require("node-thermal-printer").printer;
-const PrinterTypes = require("node-thermal-printer").types;
+const { ThermalPrinter, PrinterTypes, CharacterSet } = require('node-thermal-printer');
+
 
 const { format } = require('date-fns');
 
@@ -11,6 +11,10 @@ class Order {
         this.sangriaInfo = sangriaInfo;
         console.log(typeof (this.sangriaInfo))
         this.printer = ""
+        this.vID = vID
+        console.log(`IMPRESSORA DESEJADA:${vID}`)
+
+
     }
     printOrder() {
     
@@ -26,8 +30,11 @@ class Order {
     }
     textConfig() {
         this.printer = new ThermalPrinter({
+                
             type: PrinterTypes.EPSON,
-            interface: '//localhost/printer_octopus'
+            characterSet: CharacterSet.PC852_LATIN2,
+            removeSpecialCharacters: true, 
+            interface: '//localhost/'+this.vID
       
           });
           this.printer.setTypeFontA()

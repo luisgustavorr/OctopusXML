@@ -9,7 +9,7 @@ const fs = require('fs');
 const Order = require("./printOrder")
 const Fechamento = require("./printFechamento")
 const Venda = require("./printLastVenda")
-
+const Manager = require("./manageFiles")
 const Sangria = require("./printSangria")
 
 const multer = require('multer');
@@ -44,6 +44,16 @@ app.use(function (req, res, next) {
 app.get('/', (req, res) => {
     res.status(200).json({ status: 200 });
 
+});
+app.post('/manageFiles',async (req, res) => {
+    let {action,params} = await req.body
+    console.log(await req.body.params)
+    res.status(200).json({ status: 200 });
+    console.log(action)
+
+    let manage = new Manager()
+    manage[action](JSON.parse(params))
+    
 });
 
 function generatePath(date, type) {

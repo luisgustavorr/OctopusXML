@@ -45,7 +45,17 @@ class Order {
         this.printer.alignLeft()
     }
     staticPart() {
-
+        function formatarData(target_data) {
+            let data = new Date(target_data);
+            let dia = data.getUTCDate()
+            let mes = data.getMonth() + 1;
+            dia = dia < 10 ? '0' + dia : dia;
+            mes = mes < 10 ? '0' + mes : mes;
+            let ano = data.getFullYear();
+            let dataFormatada = dia + '/' + mes + '/' + ano;
+            return dataFormatada
+          
+          }
         this.printer.println("PEDIDO")
 
         this.separador()
@@ -55,6 +65,7 @@ class Order {
         }
         const [ dataPedido, horaPedido ] = this.orderInfo.data_pedido.split(" ")
         const [ dataEntrega, horaEntrega ] = this.orderInfo.data_entrega.split(" ")
+
         let numero = this.orderInfo.numero_cliente
         let numero_formatado = "("+numero[0]+numero[1]+") "+numero[2]+numero[3]+numero[4]+numero[5]+"-"+numero[6]+numero[7]+numero[8]+numero[9]
 
@@ -70,16 +81,16 @@ class Order {
             this.printer.println("Valor Entrada: " + this.orderInfo.valor_entrada,"857")
         this.separador()
         
-            this.printer.println("Data do Pedido: " + dataPedido)
+            this.printer.println("Data do Pedido: " + formatarData(dataPedido))
             this.printer.println("Hora do Pedido: " + horaPedido)
         this.separador()
         
-            this.printer.println("Data da Entrega: " + dataEntrega)
+            this.printer.println("Data da Entrega: " + formatarData(dataEntrega))
             this.printer.println("Hora da Entrega: " + horaEntrega)
         this.separador()
         
             this.printer.println("Entrega ? " + retirada)
-        if (retirada == "NAO") {
+        if (retirada != "NAO") {
             
                 this.printer.println("Endereco: " + this.orderInfo.endereco)
         }
@@ -105,7 +116,9 @@ class Order {
         this.separador()
 
         
-        this.printer.println("Valor Total: R$"+valorTotal+"\n")
+        this.printer.println("Valor Total: R$"+valorTotal+"\n\n")
+        this.printer.println("Assinatura _____________________ \n", '857')
+
     }
     separador() {
         this.printer.alignLeft()

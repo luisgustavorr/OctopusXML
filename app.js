@@ -186,14 +186,14 @@ if (!gotTheLock) {
                 return false;
             }
         })
-        // let autoLaunch = new AutoLaunch({
-        //     name: 'OctopusXMLPrinter',
-        //     path: app.getPath('exe'),
-        // });
+        let autoLaunch = new AutoLaunch({
+            name: 'OctopusXMLPrinter',
+            path: app.getPath('exe'),
+        });
 
-        // autoLaunch.isEnabled().then((isEnabled) => {
-        //     if (!isEnabled) autoLaunch.enable();
-        // });
+        autoLaunch.isEnabled().then((isEnabled) => {
+            if (!isEnabled) autoLaunch.enable();
+        });
 
     })
     app.on('activate', () => {

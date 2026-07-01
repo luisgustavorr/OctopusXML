@@ -4,7 +4,7 @@ const { ThermalPrinter, PrinterTypes, CharacterSet } = require('node-thermal-pri
 
 class Order {
     constructor(saleInfo, vID, pID, local = false) {
-        this.saleInfo =saleInfo;
+        this.saleInfo = saleInfo;
         this.local = local
         this.vID = vID
         console.log(`IMPRESSORA DESEJADA:${vID}`)
@@ -20,25 +20,25 @@ class Order {
             let execute = this.printer.execute()
             console.log("Print done!");
             console.log("\n\n\n");
-        console.log(this.printer.getText());
-        console.log("\n\n\n");
+            console.log(this.printer.getText());
+            console.log("\n\n\n");
 
-          } catch (error) {
+        } catch (error) {
             console.error("Print failed:", error);
-          }
+        }
     }
     printConfig() {
         this.printer = new ThermalPrinter({
-                
+
             type: PrinterTypes.EPSON,
             characterSet: CharacterSet.PC852_LATIN2,
-            removeSpecialCharacters: true, 
-            interface: '//localhost/'+this.vID
-      
-          });
-          this.printer.setTypeFontA()
-          this.printer.setTextNormal()
-          this.printer.alignLeft()
+            removeSpecialCharacters: true,
+            interface: '//localhost/' + this.vID
+
+        });
+        this.printer.setTypeFontA()
+        this.printer.setTextNormal()
+        this.printer.alignLeft()
     }
     staticPart() {
         function formatarData(target_data) {
@@ -50,14 +50,14 @@ class Order {
             let ano = data.getFullYear();
             let dataFormatada = dia + '/' + mes + '/' + ano;
             return dataFormatada
-          
-          }
+
+        }
         console.log(typeof (this.saleInfo))
         this.printer
             .println("CUPOM DE VENDA")
         this.separador();
-        console.log( this.saleInfo)
-        const [ dataCompra, horaCompra ] = this.saleInfo["infoVenda"].data.split(" ")
+        console.log(this.saleInfo)
+        const [dataCompra, horaCompra] = this.saleInfo["infoVenda"].data.split(" ")
         this.printer
             .println("Data da compra: " + formatarData(dataCompra))
         this.printer
@@ -65,32 +65,39 @@ class Order {
         this.separador();
     }
     repeatPart() {
-        let valorTotal = 0
-        for (const produto of this.saleInfo.infoProds) {
-            valorTotal = parseFloat(parseFloat(valorTotal) + (parseFloat(produto.valor)).toFixed(2) * produto.quantidade_produto)
-            
-            this.printer.println("Produto: "+produto.nome+"\n")
-            this.printer.println("Quantidade: "+produto.quantidade_produto+"\n")
-            this.printer.println("Valor: R$"+parseFloat(produto.valor).toFixed(2)+"\n")
-                this.separador()
-
-        }
-        valorTotal = parseFloat(valorTotal).toFixed(2)
-
-        this.printer
-        .println("Valor Bruto: R$"+valorTotal+"\n")
-        let desc = parseFloat(this.saleInfo["infoVenda"].desconto_em_dinheiro).toFixed(2)
-        this.printer
-        .println("Desconto: R$"+desc+"\n")
-        this.printer
-        .println("Valor Total: R$"+parseFloat(valorTotal- desc).toFixed(2)+"\n")
-
+        this.printer.table(["QTDE","PRECO","DESCONTO","ACRESCIMO","TOTAL"]);  
         this.separador()
 
+        let valorTotal = 0
+        for (const produto of this.saleInfo.infoProds) {
+            let desconto = produto.desconto ||0
+            valorTotal = parseFloat(parseFloat(valorTotal) + (parseFloat(produto.valor)).toFixed(2) * produto.quantidade_produto)
+
+            this.printer.table([produto.nome.trim()])
+            this.printer.table([produto.quantidade_produto,parseFloat(produto.valor).toFixed(2),parseFloat(desconto).toFixed(2),"00.00",(parseFloat(produto.valor) *produto.quantidade_produto).toFixed(2) ]);  
+ 
+        }
+        this.separador()
+     
+
+        let desc = parseFloat(this.saleInfo["infoVenda"].desconto_em_dinheiro).toFixed(2)
+
+        valorTotal = parseFloat(valorTotal).toFixed(2)
+
+//         this.printer
+//             .println(`
+// FRETE   V. BRUTO   DESCONTO   ACRESCIMO   TOTAL
+// 00.00      ${valorTotal}      ${desc}       00.00   ${parseFloat(valorTotal - desc).toFixed(2)}`)
+this.printer.table(["FRETE","V. BRUTO","DESCONTO","ACRESCIMO","TOTAL"]);   
+this.printer.table(["00.00",valorTotal,desc,"00.00",parseFloat(valorTotal - desc).toFixed(2)]);   
+        this.separador()
+        this.printer.alignCenter()
+        this.printer
+        .println("AGRADECEMOS A SUA PREFEÊNCIA.")
     }
     separador() {
         this.printer.alignLeft()
-        this.printer.println('='.repeat(38));
+        this.printer.drawLine(); 
     }
 }
 // let data ={"infoProds":[{"id":"1331","colaborador":"4","data":"2024-03-19 04:00:42","valor":"6.9","caixa":"Mix Salgados Prainha Ltda","produto":"1331","forma_pagamento":"Dinheiro","pedido_id":"0","quantidade_produto":"3","venda_dividida_id":"0","troco":"3.1","nome":"PAO DE BATATA COM 12 UNID","codigo":"7890000908573","administrador":"1","preco":"6.9","por_peso":"0","codigo_id":"90857","vendido":"1","ncm":"1905.90.90","cod_grp_financeiro":"40","cst_icms":"102","icms":"18","cst_pis_cofins":"99","json_precos":"{\"Mix Salgados Ltda\":\"6.9\",\"Mix Salgados Prainha Ltda\":\"6.9\",\"Mix Salgados Variados Ltda\":\"3.90\"}","validade":"5"}],"infoVenda":{"data":"2024-03-19 04:00:42"}}
